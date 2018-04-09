@@ -19,7 +19,7 @@ class DQNAgent:
         # parameters about epsilon
         self.epsilon = np.ones(snakeMax)
         self.epsilon_start, self.epsilon_end = 1.0, 0.001
-        self.exploration_steps = 1000.
+        self.exploration_steps = 100000.
         self.epsilon_decay_step = (self.epsilon_start - self.epsilon_end) / self.exploration_steps
         self.learning_rate = 0.0001
         self.batch_size = 50
@@ -105,7 +105,7 @@ if __name__ == "__main__":
 
                 # save the sample <s, a, r, s'> to the replay memory
                 agent.replay_memory(state, action, reward, next_state, dead)
-                eIdx = len(env.snake)-1
+                    eIdx = len(env.snake)-1
                 if agent.epsilon[eIdx] > agent.epsilon_end:
                     agent.epsilon[eIdx] -= agent.epsilon_decay_step
                 # every some time interval, train model
