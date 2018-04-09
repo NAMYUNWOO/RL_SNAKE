@@ -71,9 +71,9 @@ if __name__ == "__main__":
     action_size = env.action_size
        
     agent = DQNAgent(state_size=state_size,action_size=action_size,render=False,snakeMax=width_height**2)
-    X = tf.placeholder(shape=[1, state_size], dtype=tf.float32) 
+    X = tf.placeholder(shape=[None, state_size], dtype=tf.float32) 
     Qpredict = agent.build_model(X)
-    Y = tf.placeholder(shape=[1, action_size], dtype=tf.float32)
+    Y = tf.placeholder(shape=[None, action_size], dtype=tf.float32)
     loss = tf.reduce_sum(tf.square(Y-Qpredict)) 
     train = tf.train.AdamOptimizer(learning_rate=agent.learning_rate).minimize(loss) 
     scores, episodes, global_step = [], [], 0
@@ -133,10 +133,9 @@ if __name__ == "__main__":
                 if len(agent.memory) < agent.train_start:
                     continue
                 
-                """
                 minibatch =  random.sample(agent.memory, agent.batch_size)
-                states = np.zeros(agent.batch_size,state_size)
-                next_states = np.zeros(agent.batch_size,state_size)
+                states = np.zeros([agent.batch_size,state_size])
+                next_states = np.zeros([agent.batch_size,state_size])
                 actions, rewards, deads = [], [], []
                 for i in range(agent.batch_size):
                     states[i] = minibatch[i][0]
@@ -163,6 +162,7 @@ if __name__ == "__main__":
                         new_Qs = sess.run(Qpredict, feed_dict={X: new_state_r})
                         Qs[0, action_r] = reward_r + agent.discount_factor * np.max(new_Qs)
                     sess.run(train, feed_dict={X: state_r, Y: Qs})
+                """
                     
             if e% 10000 == 1:
                 pylab.plot(episodes,scores,'b')
