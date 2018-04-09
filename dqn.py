@@ -105,6 +105,9 @@ if __name__ == "__main__":
 
                 # save the sample <s, a, r, s'> to the replay memory
                 agent.replay_memory(state, action, reward, next_state, dead)
+                eIdx = len(env.snake)-1
+                if agent.epsilon[eIdx] > agent.epsilon_end:
+                    agent.epsilon[eIdx] -= agent.epsilon_decay_step
                 # every some time interval, train model
 
                 score += reward
@@ -136,9 +139,6 @@ if __name__ == "__main__":
             if e % 10 == 1:
                 if len(agent.memory) < agent.train_start:
                     continue
-                eIdx = len(env.snake)-1
-                if agent.epsilon[eIdx] > agent.epsilon_end:
-                    agent.epsilon[eIdx] -= agent.epsilon_decay_step
                 for j in range(MINIBATCH):
                     # 메모리에서 사용할 리플레이를 랜덤하게 가져옴
                     for sample in random.sample(agent.memory, 50):
