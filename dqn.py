@@ -18,8 +18,6 @@ class DQNAgent:
         self.action_size = action_size
         # parameters about epsilon
         self.epsilon = np.ones(snakeMax)
-        if self.load_model:
-            self.epsilon[:12] = 0.001
         self.epsilon_start, self.epsilon_end = 1.0, 0.001
         self.exploration_steps = 1000.
         self.epsilon_decay_step = (self.epsilon_start - self.epsilon_end) / self.exploration_steps
@@ -153,4 +151,10 @@ if __name__ == "__main__":
                             new_Qs = sess.run(Qpredict, feed_dict={X: new_state_r})
                             Qs[0, action_r] = reward_r + agent.discount_factor * np.max(new_Qs)
                         sess.run(train, feed_dict={X: state_r, Y: Qs})
+            if e% 1000 == 1:
+                f = open("epi_score.txt","w")
+                for i,j in zip(episodes,scores):
+                    f.write("%d, %d\n"%(i,j))
+                f.close()
+
 
