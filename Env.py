@@ -36,7 +36,7 @@ class Env:
         self.myAction = random.randint(0,3)
         self.eatSelf = set()
         self.appleLoc = (0,0)
-        
+        self.deadCnt = 0
     
     def getBarrierDists(self,head):
         hx,hy = head[0],head[1]
@@ -145,6 +145,7 @@ class Env:
         done = False
         dead = False
         newApple = False
+        
         backCheck = np.array(ACTIONS[self.myAction]) + np.array(ACTIONS[action])
         if i+v < 0 or i+v >= self.width_height or j+h < 0 or j+h >= self.width_height:
             # snake hits border 
@@ -154,8 +155,10 @@ class Env:
         elif int(backCheck[0])== 0 and int(backCheck[1]) == 0:
             # back direction
             reward = -10.0
-            done = True
+            #done = True
+            self.deadCnt += 1
             dead = True
+            done = self.deadCnt > 3
         else:
             self.snake.appendleft((i+v,j+h))
             if self.state[i+v][j+h] == self.groundVal:
@@ -182,7 +185,8 @@ class Env:
             if len(self.snake) >= 2:
                 self.state[i][j] = self.tailVal
         
-        
+        if done:
+            self.deadCnt = 0
         self.myAction = action
         if self.fieldXYset - set(self.snake) == set():
             reward = 100
