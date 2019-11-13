@@ -11,6 +11,7 @@ def deepsarsa():
     render=False
     env =Env(width_height=7,frame_size=2,isSummary=False)
     #state_size = env.state_size
+    state_ele_size = (7*7,)
     state_size = (7*7*2,) # 하드코딩함
     frame_size = env.frame_size
     
@@ -19,7 +20,7 @@ def deepsarsa():
     for e in range(EPISODES):
         state = env.reset()
         state_,_,_,_ = env.step(env.myAction)
-        state = state.reshape(state_size)
+        state = state.reshape(state_ele_size)
         state = np.concatenate([state,state]) 
         step,score = 0,0
         done = False
@@ -28,7 +29,7 @@ def deepsarsa():
             state_ = copy.deepcopy(state)
             action  = snakeAgent.get_action(state_)
             next_state,reward,done,dead = env.step(action)
-            next_state = state.reshape(next_state)
+            next_state = next_state.reshape(state_ele_size)
             next_state = np.concatenate([next_state,state_[:-len(state_)//frame_size ]])
             if dead:
                 dead = False
