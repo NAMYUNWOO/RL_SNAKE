@@ -2,36 +2,45 @@ from Env import Env
 import numpy as np
 import os,copy
 import time
-from breakout_dqn import SnakeAgent as SA
+from deepSarsa import SnakeAgent as SA
 clearCmd = "clear"
-def breakout_dqn_game():
+EPISODES = 500000
+def deepsarsa():
     global clearCmd
     os.system(clearCmd)
-    env =Env(width_height=7,frame_size=4,isSummary=False)
-    state_size = env.state_size
+    render=False
+    env =Env(width_height=7,frame_size=2,isSummary=False)
+    #state_size = env.state_size
+    state_size = (7*7*2,) # 하드코딩함
     frame_size = env.frame_size
+    
     snakeAgent = SA(state_size)
-    state = env.reset()
-    state_,_,_,_ = env.step(env.myAction)
-    hi,hj = env.snake[0]
-    history = np.stack([state_]+[state for _ in range(frame_size-1)], axis=2)
-    history = np.reshape([history], (1, state_size[0], state_size[1], state_size[2]))
-    score = 0
-    while True:
-        time.sleep(0.2)
-        history_ = copy.deepcopy(history)
-        history_[0,hi,hj,0] *= 2
-        action  = snakeAgent.get_action(history_)
-        next_state,reward,done,dead = env.step(action)
-        hi,hj = env.snake[0]
-        next_state = np.reshape([next_state], (1, state_size[0], state_size[1], 1))
-        next_history = np.append(next_state, history[:, :, :, :frame_size-1], axis=3)
-        history = next_history
-        score += reward
-        env.render()
-        print(score)
-        if done:
-            break
+    filehist = open("./history_deepsarsa.txt",'w')
+    for e in range(EPISODES):
+        state = env.reset()
+        state_,_,_,_ = env.step(env.myAction)
+        state = state.reshape(state_size)
+        state = np.concatenate([state,state]) 
+        step,score = 0,0
+        done = False
+        while not done:
+            time.sleep(0.2)
+            state_ = copy.deepcopy(state)
+            action  = snakeAgent.get_action(state_)
+            next_state,reward,done,dead = env.step(action)
+            next_state = state.reshape(next_state)
+            next_state = np.concatenate([next_state,state_[:-len(state_)//frame_size ]])
+            if dead:
+                dead = False
+            else:
+                state = next_state
+            #state = next_state
+            score += reward
+            step += 1
+            if render:
+                env.render()
+            print(score)
+        filehist.write("epi:{}, score:{}, step:{} \n".format(e,score,step))
 
 def userGame():
     global clearCmd
@@ -72,5 +81,5 @@ if __name__ == "__main__" :
     if opt == "1":
         userGame()
     else:
-        breakout_dqn_game()
+        deepsarsa()
 

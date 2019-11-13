@@ -32,7 +32,7 @@ class Env:
             else:
                 self.state_size = (width_height,width_height,self.frame_size)
         self.action_size = len(ACTIONS)
-        self.snake = set()
+        self.snake = deque() #set()
         self.fieldXYset = set([(i,j) for i in range(self.width_height) for j in range(self.width_height)])
         self.snakeGrad = list(range(255,10,-(255-10)//(width_height*width_height)))
         self.inputKey = ""
@@ -116,7 +116,7 @@ class Env:
 
         emptySpace = list(emptySpace)
             
-        randomN = np.random.randint(len(emptySpace))
+        randomN = int(np.random.randint(len(emptySpace)))
         return emptySpace[randomN] 
 
     def render(self):
