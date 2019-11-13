@@ -58,7 +58,7 @@ def userGame():
 if __name__ == "__main__" :
     opt = ""
     while True:
-        opt = input("choose option 1 or 2\n1)playing game\n2)learing RL").strip()
+        opt = input("choose option 1 or 2\n1)playing game\n2)learing RL\n").strip()
         if opt not in ["1",'2']:
             print("choose 1 or 2")
         else:

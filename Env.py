@@ -14,6 +14,9 @@ class Env:
         observation_space = serialized game Field * 4 frames
         
         """
+        self.clearCmd = "clr"
+        if os.name == "posix":
+            self.clearCmd = "clear"
         self.isSummary = isSummary
         self.groundVal = 0
         self.appleVal = -255
@@ -117,7 +120,7 @@ class Env:
         return emptySpace[randomN] 
 
     def render(self):
-        os.system("clear")
+        os.system(self.clearCmd)
         print("& "*(self.width_height+2))
         for row in self.state:
             print("& ",end="")
