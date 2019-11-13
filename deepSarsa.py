@@ -43,14 +43,16 @@ class SnakeAgent:
         #self.sess.run(tf.compat.v1.global_variables_initializerz())            
 
     def build_model(self):
-        model = Sequential()
-        model.add(Dense(self.state_size[0]//2, activation='relu', input_shape=self.state_size))
-        model.add(Dense(self.state_size[0]//4, activation='relu'))
-        model.add(Dense(self.state_size[0]//8, activation='relu'))
-        model.add(Dense(self.action_size,activation="linear"))
+        inputs = keras.Input(shape=self.state_size, name='state')
+        x = Dense(self.state_size[0]//2, activation='relu',name="d1")(inputs)
+        x = Dense(self.state_size[0]//4, activation='relu',name="d2")(x)
+        x = Dense(self.state_size[0]//8, activation='relu',name="d3")(x)
+        outputs = Dense(self.action_size,activation="linear",name="predictions")(x)
+        model = keras.Model(inputs=inputs, outputs=outputs)
         model.summary()
         model.compile(loss='mse', optimizer=Adam(lr=0.00005))
         return model
+
     def get_action(self, state):
         if np.random.rand() <= self.epsilon:
             return random.randrange(self.action_size)
@@ -65,7 +67,6 @@ class SnakeAgent:
         state = np.float32(state / 255.0)
         next_state  = np.float32(next_state / 255.0)
         target = self.model.predict(state)[0]
-
         if done:
             target[action] = reward
         else:
