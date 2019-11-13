@@ -14,9 +14,9 @@ class Env:
         observation_space = serialized game Field * 4 frames
         
         """
-        self.clearCmd = "clr"
-        if os.name == "posix":
-            self.clearCmd = "clear"
+        self.clearCmd = "clear"
+        if os.name != "posix":
+            self.clearCmd = "cls"
         self.isSummary = isSummary
         self.groundVal = 0
         self.appleVal = -255

@@ -3,9 +3,10 @@ import numpy as np
 import os,copy
 import time
 from breakout_dqn import SnakeAgent as SA
-
+clearCmd = "clear"
 def breakout_dqn_game():
-    os.system("clear")
+    global clearCmd
+    os.system(clearCmd)
     env =Env(width_height=7,frame_size=4,isSummary=False)
     state_size = env.state_size
     frame_size = env.frame_size
@@ -33,12 +34,13 @@ def breakout_dqn_game():
             break
 
 def userGame():
-    os.system("clear")
+    global clearCmd
+    os.system(clearCmd)
     print("please, sudo required")
     print("control keys: W A S D")
     input("push anykey game start")
     import threading
-    os.system("clear")
+    os.system(clearCmd)
     env = Env(11)
     keygetting = threading.Thread(target=env.keypressInput)
     keygetting.start()
@@ -56,6 +58,9 @@ def userGame():
     print("game end")
 
 if __name__ == "__main__" :
+
+    if os.name != "posix":
+        clearCmd = "cls"
     opt = ""
     while True:
         opt = input("choose option 1 or 2\n1)playing game\n2)learing RL\n").strip()
