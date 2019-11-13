@@ -56,6 +56,16 @@ def userGame():
     print("game end")
 
 if __name__ == "__main__" :
-    breakout_dqn_game()
-    #userGame()
+    opt = ""
+    while True:
+        opt = input("choose option 1 or 2\n1)playing game\n2)learing RL").strip()
+        if opt not in ["1",'2']:
+            print("choose 1 or 2")
+        else:
+            break
+    
+    if opt == "1":
+        userGame()
+    else:
+        breakout_dqn_game()
 
