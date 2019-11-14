@@ -81,14 +81,16 @@ if __name__ == "__main__" :
         clearCmd = "cls"
     opt = ""
     while True:
-        opt = input("choose option 1 or 2\n1)playing game\n2)learing RL\n").strip()
+        opt = input("choose option 1 or 2\n1) playing game\n2) learing RL\n").strip()
         if opt not in ["1",'2']:
             print("choose 1 or 2")
         else:
             break
     
     if opt == "1":
-        userGame()
+        while True:
+            userGame()
+            input("press anykey to restart")
     else:
         deepsarsa()
 
