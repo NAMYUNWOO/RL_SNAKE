@@ -15,6 +15,7 @@ class Env:
         
         """
         self.clearCmd = "clear"
+        self.appleEatCnt = 0
         if os.name != "posix":
             self.clearCmd = "cls"
         self.isSummary = isSummary
@@ -153,15 +154,15 @@ class Env:
         if i+v < 0 or i+v >= self.width_height or j+h < 0 or j+h >= self.width_height:
             # snake hits border 
             reward = -10.0
-            done = True
+            #done = True
             dead = True
-        elif int(backCheck[0])== 0 and int(backCheck[1]) == 0:
+        elif self.appleEatCnt != 0 and  int(backCheck[0])== 0 and int(backCheck[1]) == 0:
             # back direction
-            reward = -10.0
+            reward = -10.0 
             #done = True
             self.deadCnt += 1
             dead = True
-            done = self.deadCnt > 3
+            #done = self.deadCnt > 3
         else:
             self.snake.appendleft((i+v,j+h))
             if self.state[i+v][j+h] == self.groundVal:
@@ -171,10 +172,11 @@ class Env:
                 ii,jj = self.snake.pop()
                 self.state[ii][jj] = 0
             elif self.state[i+v][j+h] == self.appleVal:
+                self.appleEatCnt += 1
                 # step to Apple location (eat apple)
                 #self.eatSelf = set()
                 #reward = 10.0*(len(self.snake)-1)
-                reward = 10
+                reward = 50.0
                 newApple = True
             else:
                 # step to self location (eat self)
@@ -189,6 +191,7 @@ class Env:
                 self.state[i][j] = self.tailVal
         
         if done:
+            self.appleEatCnt = 0
             self.deadCnt = 0
         self.myAction = action
         if self.fieldXYset - set(self.snake) == set():

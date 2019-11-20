@@ -5,14 +5,18 @@ import time
 from deepSarsa import SnakeAgent as SA
 clearCmd = "clear"
 EPISODES = 500000
-def deepsarsa():
+def deepsarsa(isSummary):
     global clearCmd
     os.system(clearCmd)
     render=True
-    env =Env(width_height=7,frame_size=2,isSummary=False)
+    env =Env(width_height=7,frame_size=1,isSummary=isSummary)
     #state_size = env.state_size
+    
     state_ele_size = 7*7
     state_size = (7*7*2,) # 하드코딩함
+    if isSummary:
+        state_ele_size = 6
+        state_size = (6,)
     frame_size = env.frame_size
     
     snakeAgent = SA(state_size)
@@ -21,7 +25,7 @@ def deepsarsa():
         state = env.reset()
         state_,_,_,_ = env.step(env.myAction)
         state = state.reshape(state_ele_size)
-        state = np.concatenate([state,state])
+        state = np.concatenate([state for _ in range(frame_size)])
         step,score = 0,0
         done = False
         while not done:
@@ -41,13 +45,14 @@ def deepsarsa():
                                   )
             if dead:
                 dead = False
-            else:
-                state = next_state
+            state = next_state
             #state = next_state
             score += reward
             step += 1
             if render:
-                env.render()
+                pass
+                #env.render()
+                #print(next_state)
             print(score)
         filehist.write("epi:{}, score:{}, step:{} \n".format(e,score,step))
 
@@ -92,5 +97,5 @@ if __name__ == "__main__" :
             userGame()
             input("press anykey to restart")
     else:
-        deepsarsa()
+        deepsarsa(True)
 
