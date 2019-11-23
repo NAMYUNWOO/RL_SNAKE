@@ -154,7 +154,7 @@ class Env:
         if i+v < 0 or i+v >= self.width_height or j+h < 0 or j+h >= self.width_height:
             # snake hits border 
             reward = -10.0
-            #done = True
+            done = True
             dead = True
         elif self.appleEatCnt != 0 and  int(backCheck[0])== 0 and int(backCheck[1]) == 0:
             # back direction
@@ -162,7 +162,7 @@ class Env:
             #done = True
             self.deadCnt += 1
             dead = True
-            #done = self.deadCnt > 3
+            done = self.deadCnt > 3
         else:
             self.snake.appendleft((i+v,j+h))
             if self.state[i+v][j+h] == self.groundVal:
@@ -176,7 +176,7 @@ class Env:
                 # step to Apple location (eat apple)
                 #self.eatSelf = set()
                 #reward = 10.0*(len(self.snake)-1)
-                reward = 50.0
+                reward = 10.0
                 newApple = True
             else:
                 # step to self location (eat self)

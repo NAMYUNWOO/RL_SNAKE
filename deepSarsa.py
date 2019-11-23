@@ -29,12 +29,12 @@ class SnakeAgent:
         self.epsilon = 1.0
         self.epsilon_min = 0.01
         self.exploration_steps = 50000.
-        self.epsilon_decay = 0.999
+        self.epsilon_decay = 0.99
         self.batch_size = 64
         self.train_start = 500
         self.update_target_rate = 10000
         self.discount_factor = 0.90
-        self.learning_rate = 0.0001
+        self.learning_rate = 0.001
         self.load_model = False        
         if self.load_model:
             self.model.load_weights("./save_model/deepsarsa.h5")
@@ -47,12 +47,12 @@ class SnakeAgent:
         #self.sess.run(tf.compat.v1.global_variables_initializerz())            
 
     def build_model(self):
-        inputs = keras.Input(shape=self.state_size, name='state')
-        x = Dense(max(self.state_size[0]//1,4), activation='relu',name="d1")(inputs)
-        x = Dense(max(self.state_size[0]//1,4), activation='relu',name="d2")(x)
-        x = Dense(max(self.state_size[0]//2,4), activation='relu',name="d3")(x)
-        outputs = Dense(self.action_size,activation="linear",name="predictions")(x)
-        model = keras.Model(inputs=inputs, outputs=outputs)
+        model = tf.keras.Sequential([
+            Dense(max(self.state_size[0]//1,4),activation='relu', name='state',input_shape=self.state_size),
+            Dense(max(self.state_size[0]//1,4), activation='relu',name="d1"),
+            Dense(max(self.state_size[0]//1,4), activation='relu',name="d2"),
+            Dense(self.action_size,activation="linear",name="predictions")
+        ])
         model.summary()
         model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
         return model

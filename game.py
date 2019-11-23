@@ -50,10 +50,10 @@ def deepsarsa(isSummary):
             score += reward
             step += 1
             if render:
-                pass
-                #env.render()
+                #pass
+                env.render()
                 #print(next_state)
-            print(score)
+            print(reward)
         filehist.write("epi:{}, score:{}, step:{} \n".format(e,score,step))
 
 def userGame():
